@@ -10,6 +10,25 @@ vim_session:
 
 ######################################################################
 
+## OMT repo
+
+OMT:
+	git clone https://github.com/wzmli/MacOMT_report.git $@
+
+cachestuff:
+	git clone https://github.com/mac-theobio/forecast_cache.git $@ 
+## 
+
+Sources += *.R *.csv
+clean.Rout: clean.R
+	$(pipeR)
+
+breaks_calibrate_vac.Rout: breaks_calibrate_vac.R breaks.csv clean.rda
+	$(pipeR)
+
+
+
+
 ### Makestuff
 
 Sources += Makefile
@@ -28,5 +47,6 @@ makestuff/Makefile:
 
 ## -include makestuff/pipeR.mk
 
+-include makestuff/pipeR.mk
 -include makestuff/git.mk
 -include makestuff/visual.mk
