@@ -61,7 +61,7 @@ opt_pars <- list(params = c(log_beta0= log(params[["beta0"]])
 	# ,logit_mu = lgf(params[["mu"]])
 	# , logit_phi1 = lgf(params[["phi1"]])
 	)
-	, rel_beta0 = c(0.8,0.9,0.7,0.6,1,0.8)
+	, rel_beta0 = c(0.8,0.9,0.7,0.6,1,1,0.8)
 #	, rel_beta0 = rep(1,n.bd)
 	, rel_vacc = clean_vac$daily_vac
 	)
@@ -75,6 +75,7 @@ priors= list(~dnorm(rel_vacc[1], mean=clean_vac$daily_vac[1],sd=0.001)
 	, ~dnorm(rel_vacc[4], mean=clean_vac$daily_vac[4],sd=0.001)
 	, ~dnorm(rel_vacc[5], mean=clean_vac$daily_vac[5],sd=0.001)
 	, ~dnorm(rel_vacc[6], mean=clean_vac$daily_vac[6],sd=0.001)
+	, ~dnorm(rel_vacc[7], mean=clean_vac$daily_vac[7],sd=0.001)
 )
 	
 
