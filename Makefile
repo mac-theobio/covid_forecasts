@@ -26,7 +26,8 @@ clean.Rout: clean.R
 breaks_calibrate_vac.Rout: breaks_calibrate_vac.R breaks.csv clean.rda
 	$(pipeR)
 
-
+betaforecast_vac.Rout: betaforecast_vac.R 
+	$(pipeR)
 
 
 ### Makestuff

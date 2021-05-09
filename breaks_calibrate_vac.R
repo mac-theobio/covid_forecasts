@@ -17,7 +17,7 @@ if(!exists("end_date")){
 end_date <- as.Date(max(all_sub$date))
 }
 
-all_inputs <- csvRead("breaks.csv")
+all_inputs <- csvRead()
 
 immunity_lag <- 14
 vac_effect <- 0.6
@@ -32,7 +32,7 @@ prov = info[["province"]]
 params <- fix_pars(read_params(paste0(prov,".csv"))
 	, target = c(R0 = 1.3 , Gbar=6)
 )
-params[["obs_disp"]] <- 30
+params[["obs_disp"]] <- 40
 params[["vacc"]] <- 1e-10
    
    # Retrieve break dates:
@@ -61,7 +61,8 @@ opt_pars <- list(params = c(log_beta0= log(params[["beta0"]])
 	# ,logit_mu = lgf(params[["mu"]])
 	# , logit_phi1 = lgf(params[["phi1"]])
 	)
-	, rel_beta0 = c(0.8,0.9,0.7,0.6,1,0.7)
+	, rel_beta0 = c(0.8,0.9,0.7,0.6,1,0.8)
+#	, rel_beta0 = rep(1,n.bd)
 	, rel_vacc = clean_vac$daily_vac
 	)
 	

@@ -4,10 +4,20 @@ library(parallel)
 library(shellpipes)
 library(cowplot)
 library(zoo)
+library(shellpipes)
 
-end_date <- as.Date("2021-05-02")
+commandEnvironments()
+
+end_date <- as.Date("2021-05-08")
 
 flist <- list.files(path="cachestuff/",pattern=as.character(end_date))
+
+mod <- readRDS(paste0("cachestuff/",flist))
+
+cc <- coef(mod$fit,"fitted")
+reopen_factor <- cc$rel_beta0[length(cc$rel_beta0)-1]/cc$rel_beta0[length(cc$rel_beta0)]
+
+print(reopen_factor)
 
 vac <- read_csv("https://data.ontario.ca/dataset/752ce2b7-c15a-4965-a3dc-397bf405e7cc/resource/8a89caa9-511c-4568-af89-7f2174b4378c/download/vaccine_doses.csv")
 
@@ -29,13 +39,6 @@ lift_frame <- data.frame(province = c("ON")
                          , vaccrate = c(0.002)
 )
 
-# x <- flist
-# voc=FALSE
-# close_factor=1
-# reopen_factor=1
-# Rmult=1
-# nsim=20
-# vacc=TRUE
 
 betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,last_vac_factor=1,nsim=200,vacc=TRUE){
  	tempmod <- readRDS(paste0("./cachestuff/",x))
@@ -43,8 +46,8 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
  	end_date <- tempmod$fit$forecast_args$end_date
  	bd <- tempmod$fit$forecast_args$time_args$break_dates
  	last_break <- bd[length(bd)]
- 	flip_date <- as.Date((as.numeric(end_date)+as.numeric(last_break))/2)
- 	# flip_date <- as.Date(last_break)
+# 	flip_date <- as.Date((as.numeric(end_date)+as.numeric(last_break))/2)
+ 	flip_date <- as.Date(last_break) - 13
  	
  	## getting all the switch dates
   scale_factor <- (lift_frame %>% filter(province == tempmod$inputs$province))[,"scale_factor"]
@@ -215,8 +218,8 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
 
 ## No Lift
 # sim0<- mclapply(flist,function(y){betaforecast(x=y,voc=FALSE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,vacc=TRUE)},mc.cores=4)
-sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1/0.69, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
-sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1/0.69, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
+sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
+sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
 
 betaforecast_dat <- bind_rows(sim1,sim2)
 use_local_data_repo <- FALSE
@@ -235,7 +238,7 @@ betaforecast_dat2 <- (all_sub
 
 # Ontario
 Ontario_dat <- betaforecast_dat2 %>% filter(province == "ON") %>% filter(var %in% c("report","S"))
-write.csv(Ontario_dat,paste0("~/workspace/mac/MacOMT_report/forecast/",end_date,"_VOC_vac.csv"))
+write.csv(Ontario_dat,paste0("OMT/forecast/",end_date,"_VOC_vac.csv"))
 write.csv(Ontario_dat,paste0("cachestuff/VOC_vac.csv"))
 
 
