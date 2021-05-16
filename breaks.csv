@@ -1,3 +1,3 @@
 province_name,province,population,use_DEoptim,DE_cores,start_date,vars,run, break_dates,notes
-Ontario, ON, 13448494,FALSE,7,"2020-03-03",report,TRUE, "2020-10-03;2020-11-23;2020-12-26;2021-01-14;2021-02-27;2021-03-19;2021-04-08",pausing restrictions; 5 regions move to red;lockdown in Toronto and Peel;elevated risk levels for 7 regions and lockdown in Windsor-Essex and York; province wide lockdown;stay-home-order;stay home order ends;second stay-at-home order"
+Ontario, ON, 13448494,FALSE,7,"2020-03-03",report,TRUE, "2020-10-03;2020-11-23;2020-12-26;2021-01-14;2021-02-27;2021-03-19;2021-04-08;2021-04-25",pausing restrictions; 5 regions move to red;lockdown in Toronto and Peel;elevated risk levels for 7 regions and lockdown in Windsor-Essex and York; province wide lockdown;stay-home-order;stay home order ends;second stay-at-home order; vaccination stablizer"
 

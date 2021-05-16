@@ -8,14 +8,14 @@ library(shellpipes)
 
 commandEnvironments()
 
-end_date <- as.Date("2021-05-09")
+end_date <- as.Date("2021-05-16")
 
 flist <- list.files(path="cachestuff/",pattern=as.character(end_date))
 
 mod <- readRDS(paste0("cachestuff/",flist))
 
 cc <- coef(mod$fit,"fitted")
-reopen_factor <- cc$rel_beta0[length(cc$rel_beta0)-1]/cc$rel_beta0[length(cc$rel_beta0)]
+reopen_factor <- cc$rel_beta0[length(cc$rel_beta0)-2]/cc$rel_beta0[length(cc$rel_beta0)]
 
 print(reopen_factor)
 
@@ -31,7 +31,7 @@ vaccdat <- (vac
 
 lift_frame <- data.frame(province = c("ON")
                          , close_date = c("2021-04-08")
-                         , reopen_date = c("2021-05-20")
+                         , reopen_date = c("2021-06-02")
                          , voc_start = c("2020-12-19")
                          , pegprop = c(0.0016)
                          , scale_factor = c(15)
@@ -41,7 +41,7 @@ lift_frame <- data.frame(province = c("ON")
 
 lift_frame <- data.frame(province = c("ON")
                          , close_date = c("2021-04-08")
-                         , reopen_date = c("2021-06-04")
+                         , reopen_date = c("2021-06-16")
                          , voc_start = c("2020-12-19")
                          , pegprop = c(0.0016)
                          , scale_factor = c(15)
@@ -57,7 +57,7 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
  	bd <- tempmod$fit$forecast_args$time_args$break_dates
  	last_break <- bd[length(bd)]
 # 	flip_date <- as.Date((as.numeric(end_date)+as.numeric(last_break))/2)
- 	flip_date <- as.Date(last_break) - 18
+ 	flip_date <- as.Date("2021-03-23")
  	
  	## getting all the switch dates
   scale_factor <- (lift_frame %>% filter(province == tempmod$inputs$province))[,"scale_factor"]
@@ -234,6 +234,9 @@ sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,re
 sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
 sim4<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
 
+sim5<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
+sim6<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
+
 
 betaforecast_dat <- bind_rows(sim1,sim2,sim3,sim4)
 use_local_data_repo <- FALSE
@@ -245,7 +248,7 @@ betaforecast_dat2 <- (all_sub
 	%>% filter(date >= as.Date("2020-09-15"))
 	# %>% mutate(obstype = ifelse(date>= as.Date("2020-12-19"),"new_obs","fitted"))
 	%>% mutate( #new_strain_fraction = factor(new_strain_fraction)
-		Vaccination = ifelse(vacc_factor == 1, "Current","Increase 50%")
+		Vaccination = ifelse(vacc_factor == 1, "Current","50% increase")
 		)
 	# %>% filter(var %in% c("report"))
 )
