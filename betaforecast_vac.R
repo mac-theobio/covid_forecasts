@@ -8,7 +8,7 @@ library(shellpipes)
 
 commandEnvironments()
 
-end_date <- as.Date("2021-05-16")
+end_date <- as.Date("2021-05-20")
 
 flist <- list.files(path="cachestuff/",pattern=as.character(end_date))
 
@@ -57,7 +57,7 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
  	bd <- tempmod$fit$forecast_args$time_args$break_dates
  	last_break <- bd[length(bd)]
 # 	flip_date <- as.Date((as.numeric(end_date)+as.numeric(last_break))/2)
- 	flip_date <- as.Date("2021-03-23")
+ 	flip_date <- as.Date("2021-04-23")
  	
  	## getting all the switch dates
   scale_factor <- (lift_frame %>% filter(province == tempmod$inputs$province))[,"scale_factor"]
@@ -228,8 +228,8 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
 
 ## No Lift
 # sim0<- mclapply(flist,function(y){betaforecast(x=y,voc=FALSE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,vacc=TRUE)},mc.cores=4)
-sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
-sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
+sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=20,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
+sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=20,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
 
 sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
 sim4<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
@@ -238,7 +238,7 @@ sim5<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,re
 sim6<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = reopen_factor, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
 
 
-betaforecast_dat <- bind_rows(sim1,sim2,sim3,sim4)
+betaforecast_dat <- bind_rows(sim1,sim2)
 use_local_data_repo <- FALSE
 source("clean.R")
 
