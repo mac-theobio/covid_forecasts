@@ -1,4 +1,5 @@
 ## This is covid_forecasts
+## https://github.com/mac-theobio/covid_forecasts
 
 current: target
 -include target.mk
